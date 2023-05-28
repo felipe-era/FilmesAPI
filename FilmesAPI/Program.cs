@@ -13,12 +13,12 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     //
-    //edicao4
+    //edicao4//
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();q
+app.UseHttpsRedirection();//q
 
 app.UseAuthorization();
 
