@@ -12,15 +12,13 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    //
-    //edicao4
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();//ddd
+app.UseHttpsRedirection();
 
-app.UseAuthorization();//
+app.UseAuthorization();
 
 app.MapControllers();
 
