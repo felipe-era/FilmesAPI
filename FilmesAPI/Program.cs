@@ -1,4 +1,17 @@
+//IDEIA DE RESPONDER OS CONTATOS DE FORMA AUTOMATICA COM A API DO CHAT GPT, DO WPP E 
+//VER COM OÉ A API DO CHATGPT
+
+using FilmesAPI.Data;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
+
+
+var connectionString = builder.Configuration.GetConnectionString("FilmeConnection");
+//FilmeContext = classe de cotexto para acesso ao banco
+builder.Services.AddDbContext<FilmeContext>(opts => 
+                              opts.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+
 
 // Add services to the container.
 builder.Services.AddControllers();
