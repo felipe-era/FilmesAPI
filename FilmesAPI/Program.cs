@@ -11,7 +11,8 @@ var connectionString = builder.Configuration.GetConnectionString("FilmeConnectio
 //FilmeContext = classe de cotexto para acesso ao banco
 builder.Services.AddDbContext<FilmeContext>(opts => 
                               opts.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
-
+//AutoMapper - Dtos conversão
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 // Add services to the container.
 builder.Services.AddControllers();

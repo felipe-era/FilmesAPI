@@ -1,4 +1,6 @@
-﻿using FilmesAPI.Data;
+﻿using AutoMapper;
+using FilmesAPI.Data;
+using FilmesAPI.Data.Dtos;
 using FilmesAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,17 +17,26 @@ public class FilmeController : ControllerBase
     //private static int id = 0;
 
     private FilmeContext _context;
+    private IMapper _mapper;
 
-    public FilmeController(FilmeContext context)
+    public FilmeController(FilmeContext context, IMapper mapper)
     {
         _context = context;
+        _mapper = mapper;
     }
 
     #endregion
 
     [HttpPost] //post
-    public IActionResult AdicionaFilme([FromBody] Filme filme) //[FromBody] é o que vem no corpo da requisição
+    public IActionResult AdicionaFilme([FromBody] CreateFilmeDto filmeDto) //[FromBody] é o que vem no corpo da requisição
     {
+        Filme filme = _mapper.Map<Filme>(filmeDto);
+
+        //Filme filme = new Filme(); fazendo a conversão manualmente (maneira incorreto), se usa o nuget
+        //{
+        //    filme.Titulo = filmeDto.Titulo;
+        //}
+
         //por validações por region..
         //if ((!string.IsNullOrEmpty(filme.Titulo) && (!string.IsNullOrEmpty(filme.Genero)) && filme.Duracao >= 70))
         //{ } Não se utiliza validações aqui.. usa a data annotations la na classe filme no caso
@@ -57,7 +68,7 @@ public class FilmeController : ControllerBase
 
     [HttpGet] //consulta filmes por intervalo skip and take 
     //https://localhost:7105/filme?skip=5&take=2 pula 5 e pega os 2 primeiros \/ quando não informado deixa o valor padrão como 0 ou 2
-    public IEnumerable<Filme> ConsultaFilmesIntervalo([FromQuery] int skip = 0, [FromQuery] int take = 2)
+    public IEnumerable<Filme> ConsultaFilmesIntervalo([FromQuery] int skip = 0, [FromQuery] int take = 10)
     {
         return _context.Filmes.Skip(skip).Take(take);
     }
