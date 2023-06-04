@@ -14,6 +14,9 @@ builder.Services.AddDbContext<FilmeContext>(opts =>
 //AutoMapper - Dtos conversão
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
+//NewtonsoftJson - trablhar com Json
+builder.Services.AddControllers().AddNewtonsoftJson();
+
 // Add services to the container.
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
