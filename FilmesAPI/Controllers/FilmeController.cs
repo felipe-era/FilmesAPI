@@ -1,4 +1,5 @@
-﻿using FilmesAPI.Models;
+﻿using FilmesAPI.Data;
+using FilmesAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FilmesAPI.Controllers;
@@ -9,8 +10,16 @@ public class FilmeController : ControllerBase
 {
     #region == Atributos ==
 
-    private static List<Filme> filmes = new List<Filme>();
-    private static int id = 0;
+    // \/ inicialmente utilizada para criar o bd
+    //private static List<Filme> filmes = new List<Filme>();
+    //private static int id = 0;
+
+    private FilmeContext _context;
+
+    public FilmeController(FilmeContext context)
+    {
+        _context = context;
+    }
 
     #endregion
 
