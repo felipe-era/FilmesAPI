@@ -29,9 +29,8 @@ public class FilmeController : ControllerBase
         //por validações por region..
         //if ((!string.IsNullOrEmpty(filme.Titulo) && (!string.IsNullOrEmpty(filme.Genero)) && filme.Duracao >= 70))
         //{ } Não se utiliza validações aqui.. usa a data annotations la na classe filme no caso
-        filme.Id = id++;
-        filmes.Add(filme);
-
+        _context.Filmes.Add(filme);
+        _context.SaveChanges();
         //Padrão rest como é?
         //R: deve-se retornar o objeto ao usuário (Retornar as informações que foram recém cadastradas (inseridas)
         //
@@ -60,13 +59,13 @@ public class FilmeController : ControllerBase
     //https://localhost:7105/filme?skip=5&take=2 pula 5 e pega os 2 primeiros \/ quando não informado deixa o valor padrão como 0 ou 2
     public IEnumerable<Filme> ConsultaFilmesIntervalo([FromQuery] int skip = 0, [FromQuery] int take = 2)
     {
-        return filmes.Skip(skip).Take(take);
+        return _context.Filmes.Skip(skip).Take(take);
     }
 
     [HttpGet("{id}")] //
     public IActionResult ConsultaFilmesPorId(int id)
     {
-        var objfilme = filmes.FirstOrDefault(filme => filme.Id == id);
+        var objfilme = _context.Filmes.FirstOrDefault(filme => filme.Id == id);
 
         if (objfilme == null) return NotFound();
 
