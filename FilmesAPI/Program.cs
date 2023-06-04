@@ -1,5 +1,5 @@
 //IDEIA DE RESPONDER OS CONTATOS DE FORMA AUTOMATICA COM A API DO CHAT GPT, DO WPP E 
-//VER COM OÉ A API DO CHATGPT //Teste autor no git..//
+//VER COM OÉ A API DO CHATGPT //Teste autor no git..
 
 using FilmesAPI.Data;
 using Microsoft.EntityFrameworkCore;
