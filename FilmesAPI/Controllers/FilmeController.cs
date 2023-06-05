@@ -2,6 +2,7 @@
 using FilmesAPI.Data;
 using FilmesAPI.Data.Dtos;
 using FilmesAPI.Models;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FilmesAPI.Controllers;
@@ -26,8 +27,14 @@ public class FilmeController : ControllerBase
     }
 
     #endregion
-
+    /// <summary>
+    /// Adiciona um filme ao banco de dados
+    /// </summary>
+    /// <param name="filmeDto">Objeto com os campos necessários para criação de um filme</param>
+    /// <returns>IActionResult</returns>
+    /// <response code="201">Caso inserção seja feita com sucesso</response>
     [HttpPost] //post
+    [ProducesResponseType(StatusCodes.Status201Created)]
     public IActionResult AdicionaFilme([FromBody] CreateFilmeDto filmeDto) //[FromBody] é o que vem no corpo da requisição
     {
         Filme filme = _mapper.Map<Filme>(filmeDto);
@@ -68,22 +75,22 @@ public class FilmeController : ControllerBase
 
     [HttpGet] //consulta filmes por intervalo skip and take 
     //https://localhost:7105/filme?skip=5&take=2 pula 5 e pega os 2 primeiros \/ quando não informado deixa o valor padrão como 0 ou 2
-    public IEnumerable<Filme> ConsultaFilmesIntervalo([FromQuery] int skip = 0, [FromQuery] int take = 10)
+    public IEnumerable<ReadFilmeDto> ConsultaFilmesIntervalo([FromQuery] int skip = 0, [FromQuery] int take = 10)
     {
-        return _context.Filmes.Skip(skip).Take(take);
+        return _mapper.Map<List<ReadFilmeDto>>(_context.Filmes.Skip(skip).Take(take));
     }
 
     [HttpGet("{id}")] //
     public IActionResult ConsultaFilmesPorId(int id)
     {
         var objfilme = _context.Filmes.FirstOrDefault(filme => filme.Id == id);
-
         if (objfilme == null) return NotFound();
-
-        return Ok(objfilme);
+        
+        var filmeDto = _mapper.Map<ReadFilmeDto>(objfilme);
+        return Ok(filmeDto);
     }
 
-    [HttpPut("{id}")]
+    [HttpPut("{id}")] //atualiza
     public IActionResult AtualizaFilme(int id, [FromBody]UpdateFilmeDto filmeDto)//frombody corpo da requisição
     {
         var filme = _context.Filmes.FirstOrDefault(filme => filme.Id == id); //uma variavel para o pegar o id
@@ -92,6 +99,35 @@ public class FilmeController : ControllerBase
         _context.SaveChanges();
         //retornar o status code (Atualização com sucesso)
         return NoContent(); //204
+    }
+
+    [HttpPatch("{id}")]//Atualiza parcialmente
+    public IActionResult AtualizaFilmePatchParcial(int id, JsonPatchDocument<UpdateFilmeDto> patch )
+    {
+        var filme = _context.Filmes.FirstOrDefault(filme => filme.Id == id);
+        if (filme == null) return NotFound();
+
+        var filmeParaAtualizar = _mapper.Map<UpdateFilmeDto>(filme);
+        patch.ApplyTo(filmeParaAtualizar, ModelState);
+
+        if (!TryValidateModel(filmeParaAtualizar))//se não conseguir validar
+        {
+            return ValidationProblem(ModelState);
+        }
+        _mapper.Map(filmeParaAtualizar, filme);
+        _context.SaveChanges();
+        return NoContent(); //204
+    }
+
+    [HttpDelete("{id}")]
+    public IActionResult DeletaFilme(int id)
+    {
+        var filme = _context.Filmes.FirstOrDefault(filme => filme.Id == id);
+        if (filme == null) return NotFound();
+
+        _context.Remove(filme);
+        _context.SaveChanges(); 
+        return NoContent(); //204 + atualizado ou removido com sucesso,
 
     }
 
