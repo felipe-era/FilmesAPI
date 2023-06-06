@@ -13,7 +13,7 @@ public class FilmeContext : DbContext //add o DbContext para usar o Entity
         
     }
 
-    //propriedades para acesso aos filmes da base
+    //propriedades para acesso aos filmes/cinemas da base
     public DbSet<Filme> Filmes { get; set; }
-
+    public DbSet<Cinema> Cinemas { get; set; }
 }
