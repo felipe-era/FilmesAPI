@@ -40,4 +40,3 @@ public class FilmeContext : DbContext //add o DbContext para usar o Entity
     public DbSet<Endereco> Enderecos { get; set; }
     public DbSet<Sessao> Sessoes { get; set; }
 }
-}

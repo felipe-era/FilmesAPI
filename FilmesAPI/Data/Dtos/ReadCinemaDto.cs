@@ -6,5 +6,6 @@
         public string Nome { get; set; }
 
         public ReadEnderecoDto EnderecoDto { get; set; }
+        public object Endereco { get; internal set; }
     }
 }
